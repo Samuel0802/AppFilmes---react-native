@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import api from "./src/services/api";
 import Filmes from "./src/Filmes";
 
 export default function App(){
 
   const [filmes, setFilmes] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect( () => {
 
@@ -13,12 +14,20 @@ export default function App(){
       const response = await api.get('r-api/?api=filmes'); //get() = buscar algo da api
 
       setFilmes(response.data);
+      setLoading(false);
     }
 
     loadFilmes();
 
   },[]);//Array de dependecia fica vazio - motivos -> quando user ver a tela busque api
 
+   if(loading){
+    return(
+      <View style={{alignItems: 'center', justifyContent:'center',  flex:1}}>
+     <ActivityIndicator color="#121212" size={45}/>
+      </View>
+    );
+   }else{
   return(
  
     <View style={styles.container}>
@@ -30,7 +39,7 @@ export default function App(){
     </View>
   );
 }
-
+}
 const styles = StyleSheet.create({
    container:{
     flex: 1
